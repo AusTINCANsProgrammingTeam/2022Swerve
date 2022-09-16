@@ -8,49 +8,30 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.MotorControllers;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.hardware.AbsoluteEncoders;
+import frc.robot.hardware.MotorControllers;
 
 public class SwerveSubsystem extends SubsystemBase{
     private final SwerveModule frontLeft = new SwerveModule(
         MotorControllers.FrontLeftModuleDrive.getMotor(),
         MotorControllers.FrontLeftModuleTurn.getMotor(),
-        DriveConstants.FrontLeftModule.driveMotorReversed, 
-        DriveConstants.FrontLeftModule.turningMotorReversed, 
-        DriveConstants.FrontLeftModule.absoluteEncoderID, 
-        DriveConstants.FrontLeftModule.absoluteEncoderOffset, 
-        DriveConstants.FrontLeftModule.absoluteEncoderReversed
-        );
+        AbsoluteEncoders.FrontLeftModule.getSupplier());
 
     private final SwerveModule frontRight = new SwerveModule(
         MotorControllers.FrontRightModuleDrive.getMotor(),
         MotorControllers.FrontRightModuleTurn.getMotor(),
-        DriveConstants.FrontRightModule.driveMotorReversed, 
-        DriveConstants.FrontRightModule.turningMotorReversed, 
-        DriveConstants.FrontRightModule.absoluteEncoderID, 
-        DriveConstants.FrontRightModule.absoluteEncoderOffset, 
-        DriveConstants.FrontRightModule.absoluteEncoderReversed
-        );
+        AbsoluteEncoders.FrontRightModule.getSupplier());
 
     private final SwerveModule backLeft = new SwerveModule(
         MotorControllers.BackLeftModuleDrive.getMotor(),
         MotorControllers.BackLeftModuleTurn.getMotor(),
-        DriveConstants.BackLeftModule.driveMotorReversed, 
-        DriveConstants.BackLeftModule.turningMotorReversed, 
-        DriveConstants.BackLeftModule.absoluteEncoderID, 
-        DriveConstants.BackLeftModule.absoluteEncoderOffset, 
-        DriveConstants.BackLeftModule.absoluteEncoderReversed
-        );
+        AbsoluteEncoders.BackLeftModule.getSupplier());
 
     private final SwerveModule backRight = new SwerveModule(
         MotorControllers.BackRightModuleDrive.getMotor(),
         MotorControllers.BackRightModuleTurn.getMotor(),
-        DriveConstants.BackRightModule.driveMotorReversed, 
-        DriveConstants.BackRightModule.turningMotorReversed, 
-        DriveConstants.BackRightModule.absoluteEncoderID, 
-        DriveConstants.BackRightModule.absoluteEncoderOffset, 
-        DriveConstants.BackRightModule.absoluteEncoderReversed
-        );
+        AbsoluteEncoders.BackRightModule.getSupplier());
 
     private AHRS gyro = new AHRS(SPI.Port.kMXP);
 

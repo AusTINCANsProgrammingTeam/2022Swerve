@@ -1,4 +1,4 @@
-package frc.robot;
+package frc.robot.hardware;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -19,12 +19,30 @@ public enum MotorControllers {
     private int ID;
     private int currentLimit;
     private double openLoopRampRate;
+    private boolean reversed;
     private CANSparkMax motor;
+
+    MotorControllers(int ID, int currentLimit, double openLoopRampRate, boolean reversed){
+        this.ID = ID;
+        this.currentLimit = currentLimit;
+        this.openLoopRampRate = openLoopRampRate;
+        this.reversed = reversed;
+        initializeMotor();
+    }
 
     MotorControllers(int ID, int currentLimit, double openLoopRampRate){
         this.ID = ID;
         this.currentLimit = currentLimit;
         this.openLoopRampRate = openLoopRampRate;
+        this.reversed = false;
+        initializeMotor();
+    }
+
+    MotorControllers(int ID, int currentLimit, boolean reversed){
+        this.ID = ID;
+        this.currentLimit = currentLimit;
+        this.openLoopRampRate = MotorDefaults.kOpenLoopRampRate;
+        this.reversed = reversed;
         initializeMotor();
     }
 
@@ -32,6 +50,15 @@ public enum MotorControllers {
         this.ID = ID;
         this.currentLimit = currentLimit;
         this.openLoopRampRate = MotorDefaults.kOpenLoopRampRate;
+        this.reversed = false;
+        initializeMotor();
+    }
+
+    MotorControllers(int ID, boolean reversed){
+        this.ID = ID;
+        this.currentLimit = MotorDefaults.kCurrentLimit;
+        this.openLoopRampRate = MotorDefaults.kOpenLoopRampRate;
+        this.reversed = reversed;
         initializeMotor();
     }
 
@@ -39,6 +66,7 @@ public enum MotorControllers {
         this.ID = ID;
         this.currentLimit = MotorDefaults.kCurrentLimit;
         this.openLoopRampRate = MotorDefaults.kOpenLoopRampRate;
+        this.reversed = false;
         initializeMotor();
     }
 
@@ -46,6 +74,7 @@ public enum MotorControllers {
         motor = new CANSparkMax(ID, MotorType.kBrushless);
         motor.setOpenLoopRampRate(openLoopRampRate);
         motor.setSmartCurrentLimit(currentLimit);
+        motor.setInverted(reversed);
     }
 
     public CANSparkMax getMotor(){

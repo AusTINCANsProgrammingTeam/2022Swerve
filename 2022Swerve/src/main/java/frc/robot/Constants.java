@@ -54,38 +54,6 @@ public final class Constants {
             new Translation2d(kWheelBase / 2, kTrackWidth /2),
             new Translation2d(-kWheelBase / 2, -kTrackWidth / 2),
             new Translation2d(-kWheelBase / 2, kTrackWidth / 2));
-
-        public static final class FrontLeftModule{
-            public static final boolean driveMotorReversed = false;
-            public static final boolean turningMotorReversed = false;
-            public static final int absoluteEncoderID = 0;
-            public static final double absoluteEncoderOffset = 0; 
-            public static final boolean absoluteEncoderReversed = false;
-        }
-
-        public static final class FrontRightModule{
-            public static final boolean driveMotorReversed = false;
-            public static final boolean turningMotorReversed = false;
-            public static final int absoluteEncoderID = 0;
-            public static final double absoluteEncoderOffset = 0; 
-            public static final boolean absoluteEncoderReversed = false; 
-        }
-
-        public static final class BackLeftModule{
-            public static final boolean driveMotorReversed = false;
-            public static final boolean turningMotorReversed = false;
-            public static final int absoluteEncoderID = 0;
-            public static final double absoluteEncoderOffset = 0; 
-            public static final boolean absoluteEncoderReversed = false;
-        }
-
-        public static final class BackRightModule{
-            public static final boolean driveMotorReversed = false;
-            public static final boolean turningMotorReversed = false;
-            public static final int absoluteEncoderID = 0;
-            public static final double absoluteEncoderOffset = 0; 
-            public static final boolean absoluteEncoderReversed = false;
-        }
     }
 
     public static final class SwerveModuleConstants{ //TODO: Update these constants with physical values

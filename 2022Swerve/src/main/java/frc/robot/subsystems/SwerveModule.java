@@ -3,11 +3,10 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.SwerveModuleConstants;
+
+import java.util.function.Supplier;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -21,22 +20,14 @@ public class SwerveModule {
 
     private final PIDController turningPIDController;
 
-    private final AnalogInput absoluteEncoder;
-    private final boolean absoluteEncoderReversed;
-    private final double absoluteEncoderOffsetRad; //The amount that the absolute encoder is offset from the wheel position, in radians
+    private final Supplier<Double> encoderSupplier;
 
-    public SwerveModule(CANSparkMax driveMotor, CANSparkMax turningMotor, boolean driveMotorReversed, boolean turningMotorReversed,
-             int absoluteEncoderID, double absoluteEncoderOffset, boolean absoluteEncoderReversed) {
+    public SwerveModule(CANSparkMax driveMotor, CANSparkMax turningMotor, Supplier<Double> encoderSupplier) {
 
-        this.absoluteEncoderOffsetRad = absoluteEncoderOffset;
-        this.absoluteEncoderReversed = absoluteEncoderReversed;
-        absoluteEncoder = new AnalogInput(absoluteEncoderID);
+        this.encoderSupplier = encoderSupplier;
 
         this.driveMotor = driveMotor;
         this.turningMotor = turningMotor;
-
-        this.driveMotor.setInverted(driveMotorReversed);
-        this.turningMotor.setInverted(turningMotorReversed);
 
         driveEncoder = this.driveMotor.getEncoder();
         turningEncoder = this.turningMotor.getEncoder();
@@ -68,16 +59,9 @@ public class SwerveModule {
         return turningEncoder.getVelocity();
     }
 
-    public double getAbsoluteEncoderRad() { //Get the value of the absolute encoder in radians
-        double angle = absoluteEncoder.getVoltage() / RobotController.getVoltage5V();
-        angle *= 2.0 * Math.PI;
-        angle -= absoluteEncoderOffsetRad;
-        return angle * (absoluteEncoderReversed ? -1.0 : 1.0);
-    }
-
     public void resetEncoders() {
         driveEncoder.setPosition(0);
-        turningEncoder.setPosition(getAbsoluteEncoderRad());
+        turningEncoder.setPosition(encoderSupplier.get());
     }
 
     public SwerveModuleState getState() {
@@ -92,7 +76,6 @@ public class SwerveModule {
         state = SwerveModuleState.optimize(state, getState().angle);
         driveMotor.set(state.speedMetersPerSecond / DriveConstants.kPhysicalMaxSpeed);
         turningMotor.set(turningPIDController.calculate(getTurningPosition(), state.angle.getRadians()));
-        SmartDashboard.putString("Swerve[" + absoluteEncoder.getChannel() + "] state", state.toString());
     }
 
     public void stop() {
