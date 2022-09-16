@@ -33,6 +33,12 @@ public final class Constants {
         
     }
 
+    public static final class MotorDefaults{
+        //Constants to use as default values for Motor Controllers
+        public static final int kCurrentLimit = 40;
+        public static final double kOpenLoopRampRate = 0.2;
+    }
+
     public static final class DriveConstants{ //TODO: Update these constants with physical values
         public static final double kPhysicalMaxSpeed = 0; //Max drivebase speed in meters per second
         public static final double kPhysicalMaxAngularSpeed = 0; //Max drivebase angular speed in radians per second
@@ -50,8 +56,6 @@ public final class Constants {
             new Translation2d(-kWheelBase / 2, kTrackWidth / 2));
 
         public static final class FrontLeftModule{
-            public static final int driveMotorID = 0;
-            public static final int turningMotorID = 0;
             public static final boolean driveMotorReversed = false;
             public static final boolean turningMotorReversed = false;
             public static final int absoluteEncoderID = 0;
@@ -60,8 +64,6 @@ public final class Constants {
         }
 
         public static final class FrontRightModule{
-            public static final int driveMotorID = 0;
-            public static final int turningMotorID = 0;
             public static final boolean driveMotorReversed = false;
             public static final boolean turningMotorReversed = false;
             public static final int absoluteEncoderID = 0;
@@ -70,8 +72,6 @@ public final class Constants {
         }
 
         public static final class BackLeftModule{
-            public static final int driveMotorID = 0;
-            public static final int turningMotorID = 0;
             public static final boolean driveMotorReversed = false;
             public static final boolean turningMotorReversed = false;
             public static final int absoluteEncoderID = 0;
@@ -80,8 +80,6 @@ public final class Constants {
         }
 
         public static final class BackRightModule{
-            public static final int driveMotorID = 0;
-            public static final int turningMotorID = 0;
             public static final boolean driveMotorReversed = false;
             public static final boolean turningMotorReversed = false;
             public static final int absoluteEncoderID = 0;

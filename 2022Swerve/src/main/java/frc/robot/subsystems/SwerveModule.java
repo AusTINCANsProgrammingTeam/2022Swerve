@@ -11,7 +11,6 @@ import frc.robot.Constants.SwerveModuleConstants;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class SwerveModule {
     private final CANSparkMax driveMotor;
@@ -26,21 +25,21 @@ public class SwerveModule {
     private final boolean absoluteEncoderReversed;
     private final double absoluteEncoderOffsetRad; //The amount that the absolute encoder is offset from the wheel position, in radians
 
-    public SwerveModule(int driveMotorID, int turningMotorID, boolean driveMotorReversed, boolean turningMotorReversed,
+    public SwerveModule(CANSparkMax driveMotor, CANSparkMax turningMotor, boolean driveMotorReversed, boolean turningMotorReversed,
              int absoluteEncoderID, double absoluteEncoderOffset, boolean absoluteEncoderReversed) {
 
         this.absoluteEncoderOffsetRad = absoluteEncoderOffset;
         this.absoluteEncoderReversed = absoluteEncoderReversed;
         absoluteEncoder = new AnalogInput(absoluteEncoderID);
 
-        driveMotor = new CANSparkMax(driveMotorID, MotorType.kBrushless);
-        turningMotor = new CANSparkMax(turningMotorID, MotorType.kBrushless);
+        this.driveMotor = driveMotor;
+        this.turningMotor = turningMotor;
 
-        driveMotor.setInverted(driveMotorReversed);
-        turningMotor.setInverted(turningMotorReversed);
+        this.driveMotor.setInverted(driveMotorReversed);
+        this.turningMotor.setInverted(turningMotorReversed);
 
-        driveEncoder = driveMotor.getEncoder();
-        turningEncoder = turningMotor.getEncoder();
+        driveEncoder = this.driveMotor.getEncoder();
+        turningEncoder = this.turningMotor.getEncoder();
 
         driveEncoder.setPositionConversionFactor(SwerveModuleConstants.kDriveEncoderRotFactor);
         driveEncoder.setVelocityConversionFactor(SwerveModuleConstants.kDriveEncoderRPMFactor);
