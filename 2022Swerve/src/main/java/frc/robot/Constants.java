@@ -49,7 +49,7 @@ public final class Constants {
             new Translation2d(-kWheelBase / 2, -kTrackWidth / 2),
             new Translation2d(-kWheelBase / 2, kTrackWidth / 2));
 
-        public static final class frontLeftModule{
+        public static final class FrontLeftModule{
             public static final int driveMotorID = 0;
             public static final int turningMotorID = 0;
             public static final boolean driveMotorReversed = false;
@@ -59,7 +59,7 @@ public final class Constants {
             public static final boolean absoluteEncoderReversed = false;
         }
 
-        public static final class frontRightModule{
+        public static final class FrontRightModule{
             public static final int driveMotorID = 0;
             public static final int turningMotorID = 0;
             public static final boolean driveMotorReversed = false;
@@ -69,7 +69,7 @@ public final class Constants {
             public static final boolean absoluteEncoderReversed = false; 
         }
 
-        public static final class backLeftModule{
+        public static final class BackLeftModule{
             public static final int driveMotorID = 0;
             public static final int turningMotorID = 0;
             public static final boolean driveMotorReversed = false;
@@ -79,7 +79,7 @@ public final class Constants {
             public static final boolean absoluteEncoderReversed = false;
         }
 
-        public static final class backRightModule{
+        public static final class BackRightModule{
             public static final int driveMotorID = 0;
             public static final int turningMotorID = 0;
             public static final boolean driveMotorReversed = false;
