@@ -7,7 +7,9 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.hardware.AbsoluteEncoders;
 import frc.robot.hardware.MotorControllers;
@@ -36,14 +38,13 @@ public class SwerveSubsystem extends SubsystemBase{
     private AHRS gyro = new AHRS(SPI.Port.kMXP);
 
     public SwerveSubsystem() {
-        new Thread(() -> {
-            try {
-                Thread.sleep(1000);
-                zeroHeading();
-            } catch (Exception e) {
-            }
-        }).start();
-        
+        new WaitUntilCommand(this::gyroReady)
+        .andThen(new InstantCommand(this::zeroHeading,this))
+        .schedule();
+    }
+
+    public boolean gyroReady() {
+        return !gyro.isCalibrating();
     }
 
     public void zeroHeading() {
