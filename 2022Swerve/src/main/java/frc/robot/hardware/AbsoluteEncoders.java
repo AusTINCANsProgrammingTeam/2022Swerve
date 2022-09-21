@@ -16,14 +16,12 @@ public enum AbsoluteEncoders {
     private boolean reversed;
     private double offset; //Offset in radians
     private AnalogInput encoder;
-    private Supplier<Double> supplier;
 
     AbsoluteEncoders(int ID, boolean reversed, double offset){
         this.ID = ID;
         this.reversed = reversed;
         this.offset = offset;
         encoder = new AnalogInput(this.ID);
-        initializeSupplier();
     }
 
     AbsoluteEncoders(int ID, boolean reversed){
@@ -31,7 +29,6 @@ public enum AbsoluteEncoders {
         this.reversed = reversed;
         this.offset = 0;
         encoder = new AnalogInput(this.ID);
-        initializeSupplier();
     }
 
     AbsoluteEncoders(int ID){
@@ -39,15 +36,6 @@ public enum AbsoluteEncoders {
         this.reversed = false;
         this.offset = 0;
         encoder = new AnalogInput(this.ID);
-        initializeSupplier();
-    }
-
-    private void initializeSupplier() {
-        supplier = new Supplier<Double>() {
-            public Double get() {
-                return calculateAngleRadians();
-            }
-        }; 
     }
 
     private double calculateAngleRadians(){ 
@@ -62,8 +50,8 @@ public enum AbsoluteEncoders {
         return encoder;
     }
 
-    public Supplier<Double> getSupplier() { 
+    public Supplier<Double> getAngleSupplier() { 
         //Use this supplier to get the encoder value in radians
-        return supplier;
+        return () -> calculateAngleRadians();
     }
 }
