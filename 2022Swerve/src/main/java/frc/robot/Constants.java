@@ -47,8 +47,8 @@ public final class Constants {
         public static final double kSpeedFactor = 4;  //Factor to divide the physical max speed by to use as max speed in mapping
         public static final double kAngularSpeedFactor = 4; //Factor to divide the physical max speed by to use as max speed in mapping
 
-        public static final double kTrackWidth = Units.inchesToMeters(0); //Distance between right and left wheels
-        public static final double kWheelBase = Units.inchesToMeters(0); //Distance between front and back wheels
+        public static final double kTrackWidth = Units.inchesToMeters(18.75); //Distance between right and left wheels
+        public static final double kWheelBase = Units.inchesToMeters(18.75); //Distance between front and back wheels
         public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics( //Creates robot geometry using the locations of the 4 wheels
             new Translation2d(kWheelBase / 2, -kTrackWidth / 2), 
             new Translation2d(kWheelBase / 2, kTrackWidth /2),
