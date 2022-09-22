@@ -56,9 +56,11 @@ public class SwerveTeleopCommand extends CommandBase {
         if(fieldOrientedFunction.get()){
             //Field Oriented Drive
             chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, turnSpeed, swerveSubsystem.getRotation2d());
+            swerveSubsystem.logChassisSpeeds(turnSpeed, xSpeed, ySpeed, true);
         } else {
             //Robot Oriented Drive
             chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turnSpeed);
+            swerveSubsystem.logChassisSpeeds(turnSpeed, xSpeed, ySpeed, false);
         }
 
         //Convert Chassis Speeds to individual module states

@@ -5,6 +5,10 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.util.datalog.StringLogEntry;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -41,6 +45,12 @@ public class SwerveSubsystem extends SubsystemBase{
 
     private AHRS gyro = new AHRS(SPI.Port.kMXP);
 
+    private DataLog datalog = DataLogManager.getLog();
+    private DoubleLogEntry rotationOutputLog = new DoubleLogEntry(datalog, "/swerve/rotout"); //Logs rotation state output
+    private DoubleLogEntry translationXOutputLog = new DoubleLogEntry(datalog, "/swerve/txout"); //Logs x translation state output
+    private DoubleLogEntry translationYOutputLog = new DoubleLogEntry(datalog, "/swerve/tyout"); //Logs y translation state output
+    private StringLogEntry controlSchemeLog = new StringLogEntry(datalog, "/swerve/scheme"); //Logs if robot is in FOD/ROD
+
     public SwerveSubsystem() {
         new WaitUntilCommand(this::gyroReady)
         .andThen(new InstantCommand(this::zeroHeading,this))
@@ -61,6 +71,13 @@ public class SwerveSubsystem extends SubsystemBase{
 
     public Rotation2d getRotation2d() {
         return Rotation2d.fromDegrees(getHeading());
+    }
+
+    public void logChassisSpeeds(double rot, double x, double y, boolean fod){
+        rotationOutputLog.append(rot);
+        translationXOutputLog.append(x);
+        translationYOutputLog.append(y);
+        controlSchemeLog.append(fod ? "FOD" : "ROD");
     }
 
     @Override
