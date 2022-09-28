@@ -45,7 +45,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     new JoystickButton(driverJoystick, OIConstants.kDriverZeroButtonID).whenPressed(() -> swerveSubsystem.zeroHeading());
-    new JoystickButton(driverJoystick, OIConstants.kDriverFODButtonID).whenPressed(() -> swerveSubsystem.toggleScheme());
+    new JoystickButton(driverJoystick, OIConstants.kDriverFODButtonID).whenPressed(() -> swerveSubsystem.toggleOrientation());
   }
 
   /**

@@ -51,18 +51,18 @@ public class SwerveSubsystem extends SubsystemBase{
     private DoubleLogEntry rotationOutputLog = new DoubleLogEntry(datalog, "/swerve/rotout"); //Logs rotation state output
     private DoubleLogEntry translationXOutputLog = new DoubleLogEntry(datalog, "/swerve/txout"); //Logs x translation state output
     private DoubleLogEntry translationYOutputLog = new DoubleLogEntry(datalog, "/swerve/tyout"); //Logs y translation state output
-    private StringLogEntry controlSchemeLog = new StringLogEntry(datalog, "/swerve/scheme"); //Logs if robot is in FOD/ROD
+    private StringLogEntry controlOrientationLog = new StringLogEntry(datalog, "/swerve/orientation"); //Logs if robot is in FOD/ROD
 
-    public boolean controlSchemeIsFOD;
+    public boolean controlOrientationIsFOD;
 
     public SwerveSubsystem() {
         new WaitUntilCommand(this::gyroReady)
         .andThen(new InstantCommand(this::zeroHeading,this))
         .schedule();
-        controlSchemeIsFOD = true;
+        controlOrientationIsFOD = true;
     }
 
-    public boolean gyroReady() {
+    private boolean gyroReady() {
         return !gyro.isCalibrating();
     }
 
@@ -90,9 +90,9 @@ public class SwerveSubsystem extends SubsystemBase{
         backRight.stop();
     }
 
-    public void toggleScheme(){
-        //Toggle control scheme from FOD/ROD
-        controlSchemeIsFOD = !controlSchemeIsFOD;
+    public void toggleOrientation(){
+        //Toggle control orientation from FOD/ROD
+        controlOrientationIsFOD = !controlOrientationIsFOD;
     }
 
     public SwerveModuleState[] convertToModuleStates(double xTranslation, double yTranslation, double rotation) {
@@ -113,7 +113,7 @@ public class SwerveSubsystem extends SubsystemBase{
 
         //Construct Chassis Speeds
         ChassisSpeeds chassisSpeeds;
-        if(controlSchemeIsFOD){
+        if(controlOrientationIsFOD){
             //Field Oriented Drive
             chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, r, this.getRotation2d());
         } else {
