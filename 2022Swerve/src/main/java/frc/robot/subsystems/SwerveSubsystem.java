@@ -6,9 +6,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
-import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -48,10 +48,10 @@ public class SwerveSubsystem extends SubsystemBase{
     private AHRS gyro = new AHRS(SPI.Port.kMXP);
 
     private DataLog datalog = DataLogManager.getLog();
-    private DoubleLogEntry rotationOutputLog = new DoubleLogEntry(datalog, "/swerve/rotout"); //Logs rotation state output
     private DoubleLogEntry translationXOutputLog = new DoubleLogEntry(datalog, "/swerve/txout"); //Logs x translation state output
     private DoubleLogEntry translationYOutputLog = new DoubleLogEntry(datalog, "/swerve/tyout"); //Logs y translation state output
-    private StringLogEntry controlOrientationLog = new StringLogEntry(datalog, "/swerve/orientation"); //Logs if robot is in FOD/ROD
+    private DoubleLogEntry rotationOutputLog = new DoubleLogEntry(datalog, "/swerve/rotout"); //Logs rotation state output
+    private BooleanLogEntry controlOrientationLog = new BooleanLogEntry(datalog, "/swerve/orientation"); //Logs if robot is in FOD/ROD
 
     public boolean controlOrientationIsFOD;
 
@@ -93,6 +93,7 @@ public class SwerveSubsystem extends SubsystemBase{
     public void toggleOrientation(){
         //Toggle control orientation from FOD/ROD
         controlOrientationIsFOD = !controlOrientationIsFOD;
+        controlOrientationLog.append(controlOrientationIsFOD);
     }
 
     public SwerveModuleState[] convertToModuleStates(double xTranslation, double yTranslation, double rotation) {
@@ -110,6 +111,11 @@ public class SwerveSubsystem extends SubsystemBase{
         x *= (DriveConstants.kPhysicalMaxSpeed / DriveConstants.kSpeedFactor);
         y *= (DriveConstants.kPhysicalMaxSpeed / DriveConstants.kSpeedFactor);
         r *= (DriveConstants.kPhysicalMaxAngularSpeed / DriveConstants.kAngularSpeedFactor);
+
+        //Log speeds used to construct chassis speeds
+        translationXOutputLog.append(x);
+        translationYOutputLog.append(y);
+        rotationOutputLog.append(r);
 
         //Construct Chassis Speeds
         ChassisSpeeds chassisSpeeds;
