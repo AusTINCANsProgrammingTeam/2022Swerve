@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.datalog.DataLog;
@@ -15,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.OIConstants;
 import frc.robot.hardware.AbsoluteEncoders;
 import frc.robot.hardware.MotorControllers;
 
@@ -51,10 +53,13 @@ public class SwerveSubsystem extends SubsystemBase{
     private DoubleLogEntry translationYOutputLog = new DoubleLogEntry(datalog, "/swerve/tyout"); //Logs y translation state output
     private StringLogEntry controlSchemeLog = new StringLogEntry(datalog, "/swerve/scheme"); //Logs if robot is in FOD/ROD
 
+    public boolean controlSchemeIsFOD;
+
     public SwerveSubsystem() {
         new WaitUntilCommand(this::gyroReady)
         .andThen(new InstantCommand(this::zeroHeading,this))
         .schedule();
+        controlSchemeIsFOD = true;
     }
 
     public boolean gyroReady() {
@@ -73,13 +78,6 @@ public class SwerveSubsystem extends SubsystemBase{
         return Rotation2d.fromDegrees(getHeading());
     }
 
-    public void logChassisSpeeds(double rot, double x, double y, boolean fod){
-        rotationOutputLog.append(rot);
-        translationXOutputLog.append(x);
-        translationYOutputLog.append(y);
-        controlSchemeLog.append(fod ? "FOD" : "ROD");
-    }
-
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Robot Heading", getHeading());
@@ -90,6 +88,41 @@ public class SwerveSubsystem extends SubsystemBase{
         frontRight.stop();
         backLeft.stop();
         backRight.stop();
+    }
+
+    public void toggleScheme(){
+        //Toggle control scheme from FOD/ROD
+        controlSchemeIsFOD = !controlSchemeIsFOD;
+    }
+
+    public SwerveModuleState[] convertToModuleStates(double xTranslation, double yTranslation, double rotation) {
+        //Get joystick inputs
+        double x = xTranslation;
+        double y = yTranslation;
+        double r = rotation;
+
+        //Apply deadband
+        x = Math.abs(x) > OIConstants.kDeadband ? x : 0.0;
+        y = Math.abs(y) > OIConstants.kDeadband ? y : 0.0;
+        r = Math.abs(r) > OIConstants.kDeadband ? r : 0.0;
+
+        //Map to speeds in meters/radians per second
+        x *= (DriveConstants.kPhysicalMaxSpeed / DriveConstants.kSpeedFactor);
+        y *= (DriveConstants.kPhysicalMaxSpeed / DriveConstants.kSpeedFactor);
+        r *= (DriveConstants.kPhysicalMaxAngularSpeed / DriveConstants.kAngularSpeedFactor);
+
+        //Construct Chassis Speeds
+        ChassisSpeeds chassisSpeeds;
+        if(controlSchemeIsFOD){
+            //Field Oriented Drive
+            chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, r, this.getRotation2d());
+        } else {
+            //Robot Oriented Drive
+            chassisSpeeds = new ChassisSpeeds(x, y, r);
+        }
+
+        //Convert Chassis Speeds to individual module states
+        return DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);  
     }
 
     public void setModuleStates(SwerveModuleState[] desiredStates) {
