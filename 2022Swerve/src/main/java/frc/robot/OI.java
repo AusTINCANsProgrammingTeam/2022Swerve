@@ -7,40 +7,40 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class OI {
     //Operator Interface (OI) class containing all control information
-    private static final int driverJoystickPort = 0;
+    private static final int kDriverJoystickPort = 0;
 
     public static class Driver{
-        private static final Joystick joystick = new Joystick(OI.driverJoystickPort);
+        private static final Joystick kJoystick = new Joystick(OI.kDriverJoystickPort);
 
-        private static final int orientationButtonID = 0; //Toggle swerve orientation
-        private static final int zeroButtonID = 0; //Zero the gyroscope
+        private static final int kOrientationButtonID = 0; //Toggle swerve orientation
+        private static final int kZeroButtonID = 0; //Zero the gyroscope
 
-        private static final int xTranslationAxis = 0;
-        private static final int yTranslationAxis = 0;
-        private static final int rotationAxis = 0;
+        private static final int kXTranslationAxis = 0;
+        private static final int kYTranslationAxis = 0;
+        private static final int kRotationAxis = 0;
 
-        private static final ControlCurve xTranslationCurve = new ControlCurve(0,0,0,0);
-        private static final ControlCurve yTranslationCurve = new ControlCurve(0,0,0,0);
-        private static final ControlCurve rotationCurve = new ControlCurve(0,0,0,0);
+        private static final ControlCurve kXTranslationCurve = new ControlCurve(0,0,0,0);
+        private static final ControlCurve kYTranslationCurve = new ControlCurve(0,0,0,0);
+        private static final ControlCurve kRotationCurve = new ControlCurve(0,0,0,0);
 
         public static Supplier<Double> getXTranslationSupplier(){
-            return () -> xTranslationCurve.calculate(joystick.getRawAxis(xTranslationAxis));
+            return () -> kXTranslationCurve.calculate(kJoystick.getRawAxis(kXTranslationAxis));
         }
 
         public static Supplier<Double> getYTranslationSupplier(){
-            return () -> yTranslationCurve.calculate(joystick.getRawAxis(yTranslationAxis));
+            return () -> kYTranslationCurve.calculate(kJoystick.getRawAxis(kYTranslationAxis));
         }
 
         public static Supplier<Double> getRotationSupplier(){
-            return () -> rotationCurve.calculate(joystick.getRawAxis(rotationAxis));
+            return () -> kRotationCurve.calculate(kJoystick.getRawAxis(kRotationAxis));
         }
 
         public static JoystickButton getOrientationButton(){
-            return new JoystickButton(joystick, orientationButtonID);
+            return new JoystickButton(kJoystick, kOrientationButtonID);
         }
 
         public static JoystickButton getZeroButton(){
-            return new JoystickButton(joystick, zeroButtonID);
+            return new JoystickButton(kJoystick, kZeroButtonID);
         }
     }
 
