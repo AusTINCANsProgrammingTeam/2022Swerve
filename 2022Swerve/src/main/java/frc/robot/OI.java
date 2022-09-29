@@ -9,7 +9,7 @@ public class OI {
     //Operator Interface (OI) class containing all control information
     private static final int kDriverJoystickPort = 0;
 
-    public static class Driver{
+    public static final class Driver{
         private static final Joystick kJoystick = new Joystick(OI.kDriverJoystickPort);
 
         private static final int kOrientationButtonID = 0; //Toggle swerve orientation
