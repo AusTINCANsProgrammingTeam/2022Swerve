@@ -18,21 +18,6 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
 
-    public static final class OIConstants{
-        //Constants for Operator Interface
-        public static final double kDeadband = 0;
-
-        public static final int kDriverControllerPort = 0;
-
-        public static final int kDriverYAxis = 0;
-        public static final int kDriverXAxis = 0;
-        public static final int kDriverRotAxis = 0;
-
-        public static final int kDriverFODButtonID = 0; //Field Oriented Drive toggle button
-        public static final int kDriverZeroButtonID = 0;
-        
-    }
-
     public static final class MotorDefaults{
         //Constants to use as default values for Motor Controllers
         public static final int kCurrentLimit = 40;

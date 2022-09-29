@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.OIConstants;
 import frc.robot.hardware.AbsoluteEncoders;
 import frc.robot.hardware.MotorControllers;
 
@@ -102,11 +101,6 @@ public class SwerveSubsystem extends SubsystemBase{
         double x = xTranslation;
         double y = yTranslation;
         double r = rotation;
-
-        //Apply deadband
-        x = Math.abs(x) > OIConstants.kDeadband ? x : 0.0;
-        y = Math.abs(y) > OIConstants.kDeadband ? y : 0.0;
-        r = Math.abs(r) > OIConstants.kDeadband ? r : 0.0;
 
         //Map to speeds in meters/radians per second
         x *= (DriveConstants.kPhysicalMaxSpeed / DriveConstants.kSpeedFactor);
