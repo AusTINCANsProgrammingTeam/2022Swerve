@@ -98,8 +98,8 @@ public class SwerveSubsystem extends SubsystemBase{
     public SwerveModuleState[] convertToModuleStates(double xTranslation, double yTranslation, double rotation) {
         //Takes axis input from joysticks and returns an array of swerve module states
 
-        double x = xTranslation;
-        double y = yTranslation;
+        double x = yTranslation; //Intentional, x in swerve kinematics is y on the joystick
+        double y = xTranslation;
         double r = rotation;
 
         //Map to speeds in meters/radians per second
