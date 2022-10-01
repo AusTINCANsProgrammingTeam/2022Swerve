@@ -27,8 +27,6 @@ public final class Constants {
     public static final class DriveConstants{ //TODO: Update these constants with physical values
         public static final double kPhysicalMaxSpeed = 0; //Max drivebase speed in meters per second
         public static final double kPhysicalMaxAngularSpeed = 0; //Max drivebase angular speed in radians per second
-        public static final double kSpeedFactor = 4;  //Factor to divide the physical max speed by to use as max speed in mapping
-        public static final double kAngularSpeedFactor = 4; //Factor to divide the physical max speed by to use as max speed in mapping
 
         public static final double kTrackWidth = Units.inchesToMeters(18.75); //Distance between right and left wheels
         public static final double kWheelBase = Units.inchesToMeters(18.75); //Distance between front and back wheels

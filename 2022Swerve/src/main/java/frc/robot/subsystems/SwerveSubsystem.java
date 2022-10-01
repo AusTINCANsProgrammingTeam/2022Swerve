@@ -103,9 +103,9 @@ public class SwerveSubsystem extends SubsystemBase{
         double r = rotation;
 
         //Map to speeds in meters/radians per second
-        x *= (DriveConstants.kPhysicalMaxSpeed / DriveConstants.kSpeedFactor);
-        y *= (DriveConstants.kPhysicalMaxSpeed / DriveConstants.kSpeedFactor);
-        r *= (DriveConstants.kPhysicalMaxAngularSpeed / DriveConstants.kAngularSpeedFactor);
+        x *= DriveConstants.kPhysicalMaxSpeed;
+        y *= DriveConstants.kPhysicalMaxSpeed;
+        r *= DriveConstants.kPhysicalMaxAngularSpeed;
 
         //Log speeds used to construct chassis speeds
         translationXOutputLog.append(x);
