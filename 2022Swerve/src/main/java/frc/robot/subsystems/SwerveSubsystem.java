@@ -4,7 +4,6 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DataLog;
@@ -77,18 +76,6 @@ public class SwerveSubsystem extends SubsystemBase{
         return Rotation2d.fromDegrees(getHeading());
     }
 
-    @Override
-    public void periodic() {
-        SmartDashboard.putNumber("Robot Heading", getHeading());
-    }
-
-    public void stopModules(){
-        frontLeft.stop();
-        frontRight.stop();
-        backLeft.stop();
-        backRight.stop();
-    }
-
     public void toggleOrientation(){
         //Toggle control orientation from FOD/ROD
         controlOrientationIsFOD = !controlOrientationIsFOD;
@@ -126,12 +113,40 @@ public class SwerveSubsystem extends SubsystemBase{
         return DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);  
     }
 
+    private void normalizeDrive(SwerveModuleState[] desiredStates, ChassisSpeeds speeds){
+        double translationalK = Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond) / DriveConstants.kPhysicalMaxSpeed;
+        double rotationalK = Math.abs(speeds.omegaRadiansPerSecond) / DriveConstants.kPhysicalMaxAngularSpeed;
+        double k = Math.max(translationalK, rotationalK);
+      
+        // Find the how fast the fastest spinning drive motor is spinning                                       
+        double realMaxSpeed = 0.0;
+        for (SwerveModuleState moduleState : desiredStates) {
+          realMaxSpeed = Math.max(realMaxSpeed, Math.abs(moduleState.speedMetersPerSecond));
+        }
+      
+        double scale = Math.min(k * DriveConstants.kPhysicalMaxSpeed / realMaxSpeed, 1);
+        for (SwerveModuleState moduleState : desiredStates) {
+          moduleState.speedMetersPerSecond *= scale;
+        }
+    }
+
     public void setModuleStates(SwerveModuleState[] desiredStates) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeed);
+        this.normalizeDrive(desiredStates, DriveConstants.kDriveKinematics.toChassisSpeeds(desiredStates));
         frontLeft.setDesiredState(desiredStates[0]);
         frontRight.setDesiredState(desiredStates[1]);
         backLeft.setDesiredState(desiredStates[2]);
         backRight.setDesiredState(desiredStates[3]);
     }
 
+    public void stopModules(){
+        frontLeft.stop();
+        frontRight.stop();
+        backLeft.stop();
+        backRight.stop();
+    }
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("Robot Heading", getHeading());
+    }
 }
