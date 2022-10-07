@@ -2,8 +2,10 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DataLog;
@@ -44,6 +46,7 @@ public class SwerveSubsystem extends SubsystemBase{
         "BR");
 
     private AHRS gyro = new AHRS(SPI.Port.kMXP);
+    private SwerveDriveOdometry odometer = new SwerveDriveOdometry(DriveConstants.kDriveKinematics, new Rotation2d(0));
 
     private DataLog datalog = DataLogManager.getLog();
     private DoubleLogEntry translationXOutputLog = new DoubleLogEntry(datalog, "/swerve/txout"); //Logs x translation state output
@@ -74,6 +77,14 @@ public class SwerveSubsystem extends SubsystemBase{
 
     public Rotation2d getRotation2d() {
         return Rotation2d.fromDegrees(getHeading());
+    }
+
+    public Pose2d getPose() {
+        return odometer.getPoseMeters();
+    }
+
+    public void resetOdometry(Pose2d pose) {
+        odometer.resetPosition(pose, getRotation2d());
     }
 
     public void toggleOrientation(){
@@ -138,6 +149,15 @@ public class SwerveSubsystem extends SubsystemBase{
         backRight.setDesiredState(desiredStates[3]);
     }
 
+    public SwerveModuleState[] getModuleStates() {
+        SwerveModuleState[] swerveModuleArray = new SwerveModuleState[4];
+        swerveModuleArray[0] = frontLeft.getState();
+        swerveModuleArray[1] = frontRight.getState();
+        swerveModuleArray[2] = backLeft.getState();
+        swerveModuleArray[3] = backRight.getState();
+        return swerveModuleArray;
+    }
+
     public void stopModules(){
         frontLeft.stop();
         frontRight.stop();
@@ -147,6 +167,8 @@ public class SwerveSubsystem extends SubsystemBase{
 
     @Override
     public void periodic() {
+        odometer.update(getRotation2d(), getModuleStates());
         SmartDashboard.putNumber("Robot Heading", getHeading());
+        SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
     }
 }
