@@ -49,10 +49,10 @@ public class OI {
     }
 
     public static class ControlCurve{
-        private double ySaturation;
-        private double yIntercept;
-        private double curvature;
-        private double deadzone;
+        private double ySaturation; //Maximum output, in percentage of possible output
+        private double yIntercept; //Minimum output, in percentage of saturation
+        private double curvature; //Curvature shift between linear and cubic
+        private double deadzone; //Range of input that will always return zero output
 
         public ControlCurve(double ySaturation, double yIntercept, double curvature, double deadzone){
             this.ySaturation = ySaturation;
@@ -62,6 +62,20 @@ public class OI {
         }
 
         public double calculate(double input){
+            /* Two equations, separated by a ternary
+            The first is the deadzone
+            y = 0 {|x| < d}
+            The second is the curve
+            y = a(sign(x) * b + (1 - b) * (c * x^3 + (1 - c) * x)) {|x| >= d}
+            Where
+            x = input
+            y = output
+            a = ySaturation
+            b = yIntercept
+            c = curvature
+            d = deadzone
+            and 0 <= a,b,c,d < 1 
+            */
             return Math.abs(input) <  deadzone ? 0 : 
             ySaturation * (Math.signum(input) * yIntercept + 
             (1 - yIntercept) * (curvature * Math.pow(input, 3) +
