@@ -128,8 +128,9 @@ public class SwerveSubsystem extends SubsystemBase{
           realMaxSpeed = Math.max(realMaxSpeed, Math.abs(moduleState.speedMetersPerSecond));
         }
       
-        //Map back to real module speed from input
+        //Map input magnitude back to speed in meters per second, divide by real speed to create scale
         double scale = Math.min(k * SwerveModuleConstants.kPhysicalMaxSpeed / realMaxSpeed, 1);
+        //Desaturate speeds using that scale
         for (SwerveModuleState moduleState : desiredStates) {
           moduleState.speedMetersPerSecond *= scale;
         }
