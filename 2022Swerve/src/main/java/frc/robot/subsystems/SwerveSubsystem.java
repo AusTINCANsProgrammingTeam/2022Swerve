@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.SwerveModuleConstants;
 import frc.robot.hardware.AbsoluteEncoders;
 import frc.robot.hardware.MotorControllers;
 
@@ -114,23 +115,29 @@ public class SwerveSubsystem extends SubsystemBase{
     }
 
     private void normalizeDrive(SwerveModuleState[] desiredStates, ChassisSpeeds speeds){
+        //Find magnitude of translation input, map to a scale of 1 in order to be comparable to rotation
         double translationalK = Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond) / DriveConstants.kPhysicalMaxSpeed;
+        //Find magnitude of rotation input, map to a scale of 1 in order to be comparable to translation
         double rotationalK = Math.abs(speeds.omegaRadiansPerSecond) / DriveConstants.kPhysicalMaxAngularSpeed;
+        //Use the larger of the two magnitudes for scaling
         double k = Math.max(translationalK, rotationalK);
       
-        // Find the how fast the fastest spinning drive motor is spinning                                       
+        //Find the how fast the fastest spinning drive motor is spinning                                       
         double realMaxSpeed = 0.0;
         for (SwerveModuleState moduleState : desiredStates) {
           realMaxSpeed = Math.max(realMaxSpeed, Math.abs(moduleState.speedMetersPerSecond));
         }
       
-        double scale = Math.min(k * DriveConstants.kPhysicalMaxSpeed / realMaxSpeed, 1);
+        //Map back to real module speed from input
+        double scale = Math.min(k * SwerveModuleConstants.kPhysicalMaxSpeed / realMaxSpeed, 1);
         for (SwerveModuleState moduleState : desiredStates) {
           moduleState.speedMetersPerSecond *= scale;
         }
     }
 
     public void setModuleStates(SwerveModuleState[] desiredStates) {
+        /*desatureWheelSpeeds fully saturates a module in many combinations of rotation and translation input, 
+        while this custom normalization avoids fully saturating a module to make the drive more controllable*/
         this.normalizeDrive(desiredStates, DriveConstants.kDriveKinematics.toChassisSpeeds(desiredStates));
         frontLeft.setDesiredState(desiredStates[0]);
         frontRight.setDesiredState(desiredStates[1]);
