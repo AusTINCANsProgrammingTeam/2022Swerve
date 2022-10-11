@@ -22,14 +22,28 @@ public class AutonSubsytem extends SubsystemBase{
 
     private SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
 
-    public Command getAutonCommand(){
+    private PIDController xController;
+    private PIDController yController;
+    private ProfiledPIDController rotationController;
+
+    private TrajectoryConfig trajectoryConfig;
+
+    public AutonSubsytem(){
+        //Define PID controllers for tracking trajectory
+        xController = new PIDController(AutonConstants.kXTranslationP, 0, 0);
+        yController = new PIDController(AutonConstants.kYTranslationP, 0, 0);
+        rotationController = new ProfiledPIDController(
+            AutonConstants.kRotationP, 0, 0, AutonConstants.kRotationalConstraints);
+        rotationController.enableContinuousInput(-Math.PI, Math.PI);
+
         //Create trajectory settings
-        TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
+        trajectoryConfig = new TrajectoryConfig(
             AutonConstants.kMaxSpeed, AutonConstants.kMaxAcceleration).
             setKinematics(DriveConstants.kDriveKinematics);
+    }
 
-        //Generate trajectory 
-        Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
+    public Trajectory getTrajectory(){
+        return TrajectoryGenerator.generateTrajectory(
             new Pose2d(0, 0, new Rotation2d(0)),
             List.of(
                 new Translation2d(1,0),
@@ -38,13 +52,10 @@ public class AutonSubsytem extends SubsystemBase{
             new Pose2d(2, -1, Rotation2d.fromDegrees(180)),
             trajectoryConfig
         );
+    }
 
-        //Define PID controllers for tracking trajectory
-        PIDController xController = new PIDController(AutonConstants.kXTranslationP, 0, 0);
-        PIDController yController = new PIDController(AutonConstants.kYTranslationP, 0, 0);
-        ProfiledPIDController rotationController = new ProfiledPIDController(
-            AutonConstants.kRotationP, 0, 0, AutonConstants.kRotationalConstraints);
-        rotationController.enableContinuousInput(-Math.PI, Math.PI);
+    public Command getAutonCommand(){
+        Trajectory trajectory = getTrajectory();
 
         //Construct command to follow trajectory
         SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
@@ -55,12 +66,13 @@ public class AutonSubsytem extends SubsystemBase{
             yController, 
             rotationController, 
             swerveSubsystem::setModuleStates, 
-            swerveSubsystem);
+            swerveSubsystem
+        );
 
-            return new SequentialCommandGroup(
-                new InstantCommand(() -> swerveSubsystem.resetOdometry(trajectory.getInitialPose())),
-                swerveControllerCommand,
-                new InstantCommand(() -> swerveSubsystem.stopModules())
-            );
+        return new SequentialCommandGroup(
+            new InstantCommand(() -> swerveSubsystem.resetOdometry(trajectory.getInitialPose())),
+            swerveControllerCommand,
+            new InstantCommand(() -> swerveSubsystem.stopModules())
+        );
     }
 }
