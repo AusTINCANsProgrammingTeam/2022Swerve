@@ -20,7 +20,7 @@ import frc.robot.Constants.DriveConstants;
 
 public class AutonSubsytem extends SubsystemBase{
 
-    private SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+    private SwerveSubsystem swerveSubsystem;
 
     private PIDController xController;
     private PIDController yController;
@@ -28,7 +28,9 @@ public class AutonSubsytem extends SubsystemBase{
 
     private TrajectoryConfig trajectoryConfig;
 
-    public AutonSubsytem(){
+    public AutonSubsytem(SwerveSubsystem swerveSubsystem){
+        this.swerveSubsystem = swerveSubsystem;
+
         //Define PID controllers for tracking trajectory
         xController = new PIDController(AutonConstants.kXTranslationP, 0, 0);
         yController = new PIDController(AutonConstants.kYTranslationP, 0, 0);

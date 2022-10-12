@@ -20,8 +20,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
-  private final AutonSubsytem autonSubsytem = new AutonSubsytem();
 
+  private final AutonSubsytem autonSubsytem = new AutonSubsytem(swerveSubsystem);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     swerveSubsystem.setDefaultCommand(new SwerveTeleopCommand(
