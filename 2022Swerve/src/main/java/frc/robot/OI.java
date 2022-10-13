@@ -12,12 +12,12 @@ public class OI {
     public static final class Driver{
         private static final Joystick kJoystick = new Joystick(OI.kDriverJoystickPort);
 
-        private static final int kOrientationButtonID = 0; //Toggle swerve orientation
-        private static final int kZeroButtonID = 0; //Zero the gyroscope
+        private static final int kOrientationButtonID = 1; //Toggle swerve orientation
+        private static final int kZeroButtonID = 2; //Zero the gyroscope
 
         private static final int kXTranslationAxis = 0;
-        private static final int kYTranslationAxis = 0;
-        private static final int kRotationAxis = 0;
+        private static final int kYTranslationAxis = 1;
+        private static final int kRotationAxis = 2;
 
         private static final ControlCurve kXTranslationCurve = new ControlCurve(0,0,0,0);
         private static final ControlCurve kYTranslationCurve = new ControlCurve(0,0,0,0);

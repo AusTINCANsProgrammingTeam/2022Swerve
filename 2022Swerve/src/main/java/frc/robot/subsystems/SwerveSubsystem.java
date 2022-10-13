@@ -1,3 +1,7 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -144,6 +148,16 @@ public class SwerveSubsystem extends SubsystemBase{
         frontRight.setDesiredState(desiredStates[1]);
         backLeft.setDesiredState(desiredStates[2]);
         backRight.setDesiredState(desiredStates[3]);
+    }
+
+    public SwerveModuleState[] getModuleStates() {
+        SwerveModuleState[] swerveModuleArray = new SwerveModuleState[4];
+        swerveModuleArray[0] = frontLeft.getState();
+        swerveModuleArray[1] = frontRight.getState();
+        swerveModuleArray[2] = backLeft.getState();
+        swerveModuleArray[3] = backRight.getState();
+
+        return swerveModuleArray;
     }
 
     public void stopModules(){
