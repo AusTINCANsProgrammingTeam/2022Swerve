@@ -1,15 +1,14 @@
 package frc.robot.subsystems;
 
-import java.util.List;
+import java.io.IOException;
+import java.nio.file.Path;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -26,8 +25,6 @@ public class AutonSubsytem extends SubsystemBase{
     private PIDController yController;
     private ProfiledPIDController rotationController;
 
-    private TrajectoryConfig trajectoryConfig;
-
     public AutonSubsytem(SwerveSubsystem swerveSubsystem){
         this.swerveSubsystem = swerveSubsystem;
 
@@ -37,27 +34,22 @@ public class AutonSubsytem extends SubsystemBase{
         rotationController = new ProfiledPIDController(
             AutonConstants.kRotationP, 0, 0, AutonConstants.kRotationalConstraints);
         rotationController.enableContinuousInput(-Math.PI, Math.PI);
-
-        //Create trajectory settings
-        trajectoryConfig = new TrajectoryConfig(
-            AutonConstants.kMaxSpeed, AutonConstants.kMaxAcceleration).
-            setKinematics(DriveConstants.kDriveKinematics);
     }
 
-    public Trajectory getTrajectory(){
-        return TrajectoryGenerator.generateTrajectory(
-            new Pose2d(0, 0, new Rotation2d(0)),
-            List.of(
-                new Translation2d(1,0),
-                new Translation2d(1,-1)
-            ),
-            new Pose2d(2, -1, Rotation2d.fromDegrees(180)),
-            trajectoryConfig
-        );
+    private Trajectory getTrajectory(String name){
+        Trajectory trajectory;
+        try {
+            Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve("pathplanner/generatedJSON/" + name + ".wplib.json");
+            trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+        } catch (IOException ex) {
+            DriverStation.reportError("Unable to open trajectory: " + name, ex.getStackTrace());
+            trajectory = null;
+        }
+        return trajectory;
     }
 
     public Command getAutonCommand(){
-        Trajectory trajectory = getTrajectory();
+        Trajectory trajectory = getTrajectory("New Path");
 
         //Construct command to follow trajectory
         SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
