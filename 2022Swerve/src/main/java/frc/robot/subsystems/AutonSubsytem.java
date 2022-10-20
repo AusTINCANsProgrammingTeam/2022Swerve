@@ -48,12 +48,9 @@ public class AutonSubsytem extends SubsystemBase{
         return trajectory;
     }
 
-    public Command getAutonCommand(){
-        Trajectory trajectory = getTrajectory("New Path");
-
-        //Construct command to follow trajectory
-        SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-            trajectory,
+    private SwerveControllerCommand followTrajectory(String name){
+        return new SwerveControllerCommand(
+            getTrajectory(name),
             swerveSubsystem::getPose, 
             DriveConstants.kDriveKinematics, 
             xController, 
@@ -62,10 +59,12 @@ public class AutonSubsytem extends SubsystemBase{
             swerveSubsystem::setModuleStates, 
             swerveSubsystem
         );
+    }
 
+    public Command getAutonCommand(){
         return new SequentialCommandGroup(
-            new InstantCommand(() -> swerveSubsystem.resetOdometry(trajectory.getInitialPose())),
-            swerveControllerCommand,
+            new InstantCommand(() -> swerveSubsystem.resetOdometry(getTrajectory("New Path").getInitialPose())),
+            followTrajectory("New Path"),
             new InstantCommand(() -> swerveSubsystem.stopModules())
         );
     }
