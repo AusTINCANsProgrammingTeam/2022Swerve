@@ -1,7 +1,6 @@
 package frc.robot.hardware;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import frc.robot.Constants.MotorDefaults;
 
@@ -20,14 +19,12 @@ public enum MotorControllers {
     private int currentLimit;
     private double openLoopRampRate;
     private boolean reversed;
-    private CANSparkMax motor;
 
     MotorControllers(int ID, int currentLimit, double openLoopRampRate, boolean reversed){
         this.ID = ID;
         this.currentLimit = currentLimit;
         this.openLoopRampRate = openLoopRampRate;
         this.reversed = reversed;
-        initializeMotor();
     }
 
     MotorControllers(int ID, int currentLimit, double openLoopRampRate){
@@ -50,14 +47,13 @@ public enum MotorControllers {
         this(ID, MotorDefaults.kCurrentLimit, MotorDefaults.kOpenLoopRampRate, false);
     }
 
-    private void initializeMotor(){
-        motor = new CANSparkMax(ID, MotorType.kBrushless);
+    public int getID(){
+        return ID;
+    }
+
+    public void configureMotor(CANSparkMax motor){
         motor.setOpenLoopRampRate(openLoopRampRate);
         motor.setSmartCurrentLimit(currentLimit);
         motor.setInverted(reversed);
-    }
-
-    public CANSparkMax getMotor(){
-        return motor;
     }
 }

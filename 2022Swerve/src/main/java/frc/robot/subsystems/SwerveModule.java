@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -17,11 +18,14 @@ import frc.robot.Robot;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.SwerveModuleConstants;
 import frc.robot.classes.RelativeEncoderSim;
+import frc.robot.hardware.AbsoluteEncoders;
+import frc.robot.hardware.MotorControllers;
 
 import java.util.function.Supplier;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class SwerveModule extends SubsystemBase {
     private final CANSparkMax driveMotor;
@@ -38,18 +42,23 @@ public class SwerveModule extends SubsystemBase {
 
     private final PIDController turningPIDController;
 
+    private final AnalogInput absoluteEncoder;
     private final Supplier<Double> encoderSupplier;
 
     private final String ID;
 
-    public SwerveModule(CANSparkMax driveMotor, CANSparkMax turningMotor, Supplier<Double> encoderSupplier, String ID) {
+    public SwerveModule(MotorControllers driveMotorConfig, MotorControllers turningMotorConfig, AbsoluteEncoders absoluteEncoderConfig, String ID) {
 
         this.ID = ID;
 
-        this.encoderSupplier = encoderSupplier;
+        absoluteEncoder = Robot.isSimulation() ? null : new AnalogInput(absoluteEncoderConfig.getID());
+        encoderSupplier = () -> absoluteEncoderConfig.convertVoltageToRadians(absoluteEncoder.getVoltage());
 
-        this.driveMotor = driveMotor;
-        this.turningMotor = turningMotor;
+        driveMotor = new CANSparkMax(driveMotorConfig.getID(), MotorType.kBrushless);
+        driveMotorConfig.configureMotor(this.driveMotor);
+
+        turningMotor = new CANSparkMax(turningMotorConfig.getID(), MotorType.kBrushless);
+        driveMotorConfig.configureMotor(this.turningMotor);
 
         driveEncoder = this.driveMotor.getEncoder();
         turningEncoder = this.turningMotor.getEncoder();
