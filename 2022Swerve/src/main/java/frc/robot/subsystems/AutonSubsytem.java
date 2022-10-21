@@ -21,8 +21,9 @@ import frc.robot.Constants.DriveConstants;
 
 public class AutonSubsytem extends SubsystemBase{
     private enum AutonModes{
-        TEST,
-        TEST2;
+        FORWARD, // Go forward 2 meters
+        BACKWARD, // Wait 3 seconds, go backward 2 meters
+        FORWARD180; // Go forward 2 meters and rotate 180 degrees
     }
 
     private SwerveSubsystem swerveSubsystem;
@@ -77,18 +78,24 @@ public class AutonSubsytem extends SubsystemBase{
     private Command getAutonSequence(){
         //Sequence of actions to be performed during the autonomous period
         switch(autonMode){
-            case TEST:
+            case FORWARD:
                return 
                     new SequentialCommandGroup(
-                        resetOdometry("New Path"),
-                        followTrajectory("New Path")
+                        resetOdometry("Forward"),
+                        followTrajectory("Forward")
                     );
-            case TEST2:
+            case BACKWARD:
                 return
                     new SequentialCommandGroup(
-                        resetOdometry("New Path"),
+                        resetOdometry("Backward"),
                         new WaitCommand(3),
-                        followTrajectory("New Path")
+                        followTrajectory("Backward")
+                    );
+            case FORWARD180:
+                return
+                    new SequentialCommandGroup(
+                        resetOdometry("Forward180"),
+                        followTrajectory("Forward180")
                     );
             default:
                 return null;
