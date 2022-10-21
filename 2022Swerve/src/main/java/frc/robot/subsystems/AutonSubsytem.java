@@ -74,7 +74,8 @@ public class AutonSubsytem extends SubsystemBase{
         return new InstantCommand(() -> swerveSubsystem.resetOdometry(getTrajectory(initialTrajectory).getInitialPose()));
     }
     
-    public Command getAutonSequence(){
+    private Command getAutonSequence(){
+        //Sequence of actions to be performed during the autonomous period
         switch(autonMode){
             case TEST:
                return 
@@ -94,7 +95,14 @@ public class AutonSubsytem extends SubsystemBase{
         }
     }
 
+    private Command getAutonEnd(){
+        //Actions to be performed unconditionally after the autonomous seqence has ended (Stop motors)
+        return new SequentialCommandGroup(
+            new InstantCommand(() -> swerveSubsystem.stopModules())
+        );
+    }
+
     public Command getAutonCommand(){
-        return getAutonSequence().andThen(new InstantCommand(() -> swerveSubsystem.stopModules()));
+        return getAutonSequence().andThen(getAutonEnd());
     }
 }
