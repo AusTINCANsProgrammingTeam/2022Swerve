@@ -14,16 +14,24 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.AutonConstants;
 import frc.robot.Constants.DriveConstants;
 
+
 public class AutonSubsytem extends SubsystemBase{
+    private enum AutonModes{
+        TEST,
+        TEST2;
+    }
 
     private SwerveSubsystem swerveSubsystem;
 
     private PIDController xController;
     private PIDController yController;
     private ProfiledPIDController rotationController;
+
+    private AutonModes autonMode;
 
     public AutonSubsytem(SwerveSubsystem swerveSubsystem){
         this.swerveSubsystem = swerveSubsystem;
@@ -61,11 +69,31 @@ public class AutonSubsytem extends SubsystemBase{
         );
     }
 
+    private Command resetOdometry(String initialTrajectory){
+        return new InstantCommand(() -> swerveSubsystem.resetOdometry(getTrajectory(initialTrajectory).getInitialPose()));
+    }
+    
+    public Command getAutonSequence(){
+        switch(autonMode){
+            case TEST:
+               return 
+                    new SequentialCommandGroup(
+                        resetOdometry("New Path"),
+                        followTrajectory("New Path")
+                    );
+            case TEST2:
+                return
+                    new SequentialCommandGroup(
+                        resetOdometry("New Path"),
+                        new WaitCommand(3),
+                        followTrajectory("New Path")
+                    );
+            default:
+                return null;
+        }
+    }
+
     public Command getAutonCommand(){
-        return new SequentialCommandGroup(
-            new InstantCommand(() -> swerveSubsystem.resetOdometry(getTrajectory("New Path").getInitialPose())),
-            followTrajectory("New Path"),
-            new InstantCommand(() -> swerveSubsystem.stopModules())
-        );
+        return getAutonSequence().andThen(new InstantCommand(() -> swerveSubsystem.stopModules()));
     }
 }
