@@ -70,6 +70,7 @@ public class AutonSubsytem extends SubsystemBase{
     }
 
     private Command resetOdometry(String initialTrajectory){
+        //Resets odometry to the initial position of the given trajectory
         return new InstantCommand(() -> swerveSubsystem.resetOdometry(getTrajectory(initialTrajectory).getInitialPose()));
     }
     
