@@ -8,6 +8,9 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.util.datalog.StringLogEntry;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -33,6 +36,9 @@ public class AutonSubsytem extends SubsystemBase{
     private ShuffleboardTab configTab = Shuffleboard.getTab("Config");
     private NetworkTableEntry delayEntry = configTab.add("Auton Delay", 0.0).getEntry();
     private SendableChooser<AutonModes> modeChooser = new SendableChooser<>();
+
+    private DataLog datalog = DataLogManager.getLog();
+    private StringLogEntry trajectoryLog = new StringLogEntry(datalog, "/auton/trajectory"); //Logs x translation state output
 
     private SwerveSubsystem swerveSubsystem;
 
@@ -72,6 +78,7 @@ public class AutonSubsytem extends SubsystemBase{
     }
 
     private SwerveControllerCommand followTrajectory(String name){
+        trajectoryLog.append(name);
         return new SwerveControllerCommand(
             getTrajectory(name),
             swerveSubsystem::getPose, 
