@@ -19,13 +19,13 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.SwerveModuleConstants;
 import frc.robot.classes.RelativeEncoderSim;
 import frc.robot.hardware.AbsoluteEncoders;
-import frc.robot.hardware.MotorControllers;
+import frc.robot.hardware.MotorController;
+import frc.robot.hardware.MotorController.MotorControllers;
 
 import java.util.function.Supplier;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class SwerveModule extends SubsystemBase {
     private final CANSparkMax driveMotor;
@@ -54,11 +54,8 @@ public class SwerveModule extends SubsystemBase {
         absoluteEncoder = Robot.isSimulation() ? null : new AnalogInput(absoluteEncoderConfig.getID());
         encoderSupplier = () -> absoluteEncoderConfig.convertVoltageToRadians(absoluteEncoder.getVoltage());
 
-        driveMotor = new CANSparkMax(driveMotorConfig.getID(), MotorType.kBrushless);
-        driveMotorConfig.configureMotor(this.driveMotor);
-
-        turningMotor = new CANSparkMax(turningMotorConfig.getID(), MotorType.kBrushless);
-        driveMotorConfig.configureMotor(this.turningMotor);
+        driveMotor = MotorController.constructMotor(driveMotorConfig);
+        turningMotor = MotorController.constructMotor(turningMotorConfig);
 
         driveEncoder = this.driveMotor.getEncoder();
         turningEncoder = this.turningMotor.getEncoder();
