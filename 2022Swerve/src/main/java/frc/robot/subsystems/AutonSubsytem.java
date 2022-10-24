@@ -90,6 +90,7 @@ public class AutonSubsytem extends SubsystemBase{
     }
     
     private Command getAutonSequence(){
+        autonMode = modeChooser.getSelected();
         //Sequence of actions to be performed during the autonomous period
         switch(autonMode){
             case FORWARD:
