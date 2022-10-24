@@ -20,7 +20,7 @@ import frc.robot.Constants.SwerveModuleConstants;
 import frc.robot.classes.RelativeEncoderSim;
 import frc.robot.hardware.AbsoluteEncoders;
 import frc.robot.hardware.MotorController;
-import frc.robot.hardware.MotorController.MotorControllers;
+import frc.robot.hardware.MotorController.MotorConfig;
 
 import java.util.function.Supplier;
 
@@ -47,7 +47,7 @@ public class SwerveModule extends SubsystemBase {
 
     private final String ID;
 
-    public SwerveModule(MotorControllers driveMotorConfig, MotorControllers turningMotorConfig, AbsoluteEncoders absoluteEncoderConfig, String ID) {
+    public SwerveModule(MotorConfig driveMotorConfig, MotorConfig turningMotorConfig, AbsoluteEncoders absoluteEncoderConfig, String ID) {
 
         this.ID = ID;
 

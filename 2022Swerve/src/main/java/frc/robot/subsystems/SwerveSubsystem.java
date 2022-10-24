@@ -21,30 +21,30 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.SwerveModuleConstants;
 import frc.robot.hardware.AbsoluteEncoders;
-import frc.robot.hardware.MotorController.MotorControllers;
+import frc.robot.hardware.MotorController.MotorConfig;
 
 public class SwerveSubsystem extends SubsystemBase{
     private final SwerveModule frontLeft = new SwerveModule(
-        MotorControllers.FrontLeftModuleDrive,
-        MotorControllers.FrontLeftModuleTurn,
+        MotorConfig.FrontLeftModuleDrive,
+        MotorConfig.FrontLeftModuleTurn,
         AbsoluteEncoders.FrontLeftModule,
         "FL");
 
     private final SwerveModule frontRight = new SwerveModule(
-        MotorControllers.FrontRightModuleDrive,
-        MotorControllers.FrontRightModuleTurn,
+        MotorConfig.FrontRightModuleDrive,
+        MotorConfig.FrontRightModuleTurn,
         AbsoluteEncoders.FrontRightModule,
         "FR");
 
     private final SwerveModule backLeft = new SwerveModule(
-        MotorControllers.BackLeftModuleDrive,
-        MotorControllers.BackLeftModuleTurn,
+        MotorConfig.BackLeftModuleDrive,
+        MotorConfig.BackLeftModuleTurn,
         AbsoluteEncoders.BackLeftModule,
         "BL");
 
     private final SwerveModule backRight = new SwerveModule(
-        MotorControllers.BackRightModuleDrive,
-        MotorControllers.BackRightModuleTurn,
+        MotorConfig.BackRightModuleDrive,
+        MotorConfig.BackRightModuleTurn,
         AbsoluteEncoders.BackRightModule,
         "BR");
 
