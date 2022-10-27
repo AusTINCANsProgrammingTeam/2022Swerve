@@ -39,6 +39,7 @@ public class AutonSubsytem extends SubsystemBase{
 
     private DataLog datalog = DataLogManager.getLog();
     private StringLogEntry trajectoryLog = new StringLogEntry(datalog, "/auton/trajectory"); //Logs x translation state output
+    private StringLogEntry commandLog = new StringLogEntry(datalog, "/auton/command"); //Logs x translation state output
 
     private SwerveSubsystem swerveSubsystem;
 
@@ -95,6 +96,11 @@ public class AutonSubsytem extends SubsystemBase{
         //Resets odometry to the initial position of the given trajectory
         return new InstantCommand(() -> swerveSubsystem.resetOdometry(getTrajectory(initialTrajectory).getInitialPose()));
     }
+
+    private Command delay(double seconds){
+        commandLog.append("Wait " + seconds);
+        return new WaitCommand(seconds);
+    }
     
     private Command getAutonSequence(){
         autonMode = modeChooser.getSelected();
@@ -110,7 +116,7 @@ public class AutonSubsytem extends SubsystemBase{
                 return
                     new SequentialCommandGroup(
                         resetOdometry("Backward"),
-                        new WaitCommand(3),
+                        delay(3),
                         followTrajectory("Backward")
                     );
             case FORWARD180:
@@ -132,6 +138,6 @@ public class AutonSubsytem extends SubsystemBase{
     }
 
     public Command getAutonCommand(){
-        return getAutonSequence().beforeStarting(new WaitCommand(delayEntry.getDouble(0.0))).andThen(getAutonEnd());
+        return getAutonSequence().beforeStarting(delay(delayEntry.getDouble(0.0))).andThen(getAutonEnd());
     }
 }
