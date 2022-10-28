@@ -25,9 +25,10 @@ public final class Constants {
         public static final double kOpenLoopRampRate = 0.2;
     }
 
+
     public static final class DriveConstants{ //TODO: Update these constants with physical values
-        public static final double kPhysicalMaxSpeed = 0; //Max drivebase speed in meters per second
-        public static final double kPhysicalMaxAngularSpeed = 0; //Max drivebase angular speed in radians per second
+        public static final double kPhysicalMaxSpeed = 1; //Max drivebase speed in meters per second
+        public static final double kPhysicalMaxAngularSpeed = 1; //Max drivebase angular speed in radians per second
 
         public static final double kTrackWidth = Units.inchesToMeters(18.75); //Distance between right and left wheels
         public static final double kWheelBase = Units.inchesToMeters(18.75); //Distance between front and back wheels
@@ -39,14 +40,15 @@ public final class Constants {
     }
 
     public static final class SwerveModuleConstants{ //TODO: Update these constants with physical values
+        public static final double kPhysicalMaxSpeed = 1; //Max module speed in meters per second
         public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
         public static final double kDriveMotorGearRatio = 6.75 / 1;
-        public static final double kTurningMotorGearRatio = 6.75 / 1;
+        public static final double kTurningMotorGearRatio = (150/7) / 1;
         public static final double kDriveEncoderRotFactor = kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters; //Conversion factor converting the Drive Encoder's rotations to meters
         public static final double kDriveEncoderRPMFactor = kDriveEncoderRotFactor / 60; //Conversion factor converting the Drive Encoder's RPM to meters per second
         public static final double kTurningEncoderRotFactor = kTurningMotorGearRatio * 2 * Math.PI; //Conversion factor converting the Turn Encoder's rotations to Radians
         public static final double kTurningEncoderRPMFactor = kTurningEncoderRotFactor / 60; //Conersion factor converting the Turn Encoder's RPM to radians per second
-        public static final double kPTurning = 0; //P gain for the turning motor
+        public static final double kPTurning = 1; //P gain for the turning motor
     }
 
     public static final class AutonConstants {
