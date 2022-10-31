@@ -111,7 +111,7 @@ public class AutonSubsytem extends SubsystemBase{
 
     private SwerveControllerCommand followTrajectory(Trajectory trajectory){
         //For use with trajectories generated from a list of poses
-        trajectoryLog.append("Following generated Trajectory");
+        trajectoryLog.append("Following generated trajectory");
         return new SwerveControllerCommand(
             trajectory,
             swerveSubsystem::getPose, 
@@ -132,8 +132,7 @@ public class AutonSubsytem extends SubsystemBase{
     }
 
     private Command delay(double seconds){
-        commandLog.append("Wait " + seconds);
-        return new WaitCommand(seconds);
+        return new WaitCommand(seconds).beforeStarting(() -> commandLog.append("Wait " + seconds + " seconds"));
     }
     
     private Command getAutonSequence(){
