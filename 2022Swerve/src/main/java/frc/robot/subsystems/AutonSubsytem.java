@@ -39,6 +39,7 @@ public class AutonSubsytem extends SubsystemBase{
         BACKWARD, // Wait 3 seconds, go backward 2 meters
         FORWARD180; // Go forward 2 meters and rotate 180 degrees
     }
+    private final AutonModes kDefaultAutonMode = AutonModes.FORWARD;
 
     private ShuffleboardTab configTab = Shuffleboard.getTab("Config");
     private NetworkTableEntry delayEntry = configTab.add("Auton Delay", 0.0).getEntry();
@@ -65,6 +66,7 @@ public class AutonSubsytem extends SubsystemBase{
         for(AutonModes mode : AutonModes.values()){
             modeChooser.addOption(mode.toString(), mode);
         }
+        modeChooser.setDefaultOption(kDefaultAutonMode.toString(), kDefaultAutonMode);
         configTab.add("Auton mode", modeChooser);
 
         //Define PID controllers for tracking trajectory
@@ -96,7 +98,7 @@ public class AutonSubsytem extends SubsystemBase{
 
     private SwerveControllerCommand followTrajectory(String name) throws IOException{
         //For use with trajectories generated from pathplanner
-        trajectoryLog.append(name);
+        trajectoryLog.append("Following trajectory " + name);
         return new SwerveControllerCommand(
             getTrajectory(name),
             swerveSubsystem::getPose, 
