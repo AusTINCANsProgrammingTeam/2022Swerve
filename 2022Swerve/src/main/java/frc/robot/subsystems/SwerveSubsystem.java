@@ -66,6 +66,8 @@ public class SwerveSubsystem extends SubsystemBase{
         .andThen(new InstantCommand(this::zeroHeading,this))
         .schedule();
         controlOrientationIsFOD = true;
+
+        resetOdometry(new Pose2d(0, 0, new Rotation2d(0)));
     }
 
     private boolean gyroReady() {
