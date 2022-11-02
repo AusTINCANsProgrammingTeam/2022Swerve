@@ -143,8 +143,8 @@ public class AutonSubsytem extends SubsystemBase{
             case FORWARD:
                return 
                     new SequentialCommandGroup(
-                        resetOdometry("foo"),
-                        followTrajectory("bar")
+                        resetOdometry("Forward"),
+                        followTrajectory("Forward")
                     );
             case BACKWARD:
                 return
