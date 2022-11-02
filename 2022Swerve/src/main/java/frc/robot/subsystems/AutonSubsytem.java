@@ -92,24 +92,14 @@ public class AutonSubsytem extends SubsystemBase{
         );
     }
 
-    private PPSwerveControllerCommand followTrajectory(String name) throws NullPointerException{
+    private Command followTrajectory(String name) throws NullPointerException{
         //For use with trajectories generated from pathplanner
-        trajectoryLog.append("Following trajectory " + name);
         PathPlannerTrajectory trajectory = getTrajectory(name);
         if(Objects.isNull(trajectory)){throw new NullPointerException();}
-        return new PPSwerveControllerCommand(
-            trajectory,
-            swerveSubsystem::getPose, 
-            DriveConstants.kDriveKinematics, 
-            xController, 
-            yController, 
-            rotationController, 
-            swerveSubsystem::setModuleStates, 
-            swerveSubsystem
-        );
+        return followTrajectory(name, trajectory);
     }
 
-    private PPSwerveControllerCommand followTrajectory(PathPlannerTrajectory trajectory){
+    private Command followTrajectory(String name, PathPlannerTrajectory trajectory){
         //For use with trajectories generated from a list of poses
         trajectoryLog.append("Following generated trajectory");
         return new PPSwerveControllerCommand(
@@ -121,7 +111,8 @@ public class AutonSubsytem extends SubsystemBase{
             rotationController, 
             swerveSubsystem::setModuleStates, 
             swerveSubsystem
-        );
+        ).beforeStarting(() -> trajectoryLog.append("Following trajectory " + name)
+        ).andThen(() -> trajectoryLog.append("Following trajectory " + name));
     }
 
     private Command resetOdometry(String initialTrajectory) throws NullPointerException{
@@ -171,7 +162,7 @@ public class AutonSubsytem extends SubsystemBase{
     private Command getBackupSequence(){
         //Backup sequence in case a trajectory fails to load
         return new SequentialCommandGroup(
-            followTrajectory(
+            followTrajectory("Up",
                 generateTrajectory(
                     constructPoint(0, 0, 0, 90),
                     constructPoint(0, 1, 0, 0)
