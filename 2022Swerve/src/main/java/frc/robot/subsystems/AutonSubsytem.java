@@ -101,7 +101,6 @@ public class AutonSubsytem extends SubsystemBase{
 
     private Command followTrajectory(String name, PathPlannerTrajectory trajectory){
         //For use with trajectories generated from a list of poses
-        trajectoryLog.append("Following generated trajectory");
         return new PPSwerveControllerCommand(
             trajectory,
             swerveSubsystem::getPose, 
@@ -112,7 +111,7 @@ public class AutonSubsytem extends SubsystemBase{
             swerveSubsystem::setModuleStates, 
             swerveSubsystem
         ).beforeStarting(() -> trajectoryLog.append("Following trajectory " + name)
-        ).andThen(() -> trajectoryLog.append("Following trajectory " + name));
+        ).andThen(() -> trajectoryLog.append("Trajectory " + name +  " Ended"));
     }
 
     private Command resetOdometry(String initialTrajectory) throws NullPointerException{
