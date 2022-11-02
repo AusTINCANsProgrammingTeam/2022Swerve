@@ -66,8 +66,6 @@ public class SwerveSubsystem extends SubsystemBase{
         .andThen(new InstantCommand(this::zeroHeading,this))
         .schedule();
         controlOrientationIsFOD = true;
-
-        resetOdometry(new Pose2d(0, 0, new Rotation2d(0)));
     }
 
     private boolean gyroReady() {
@@ -140,16 +138,18 @@ public class SwerveSubsystem extends SubsystemBase{
         double k = Math.max(translationalK, rotationalK);
       
         //Find the how fast the fastest spinning drive motor is spinning                                       
-        double realMaxSpeed = 0.0;
+        double realMaxSpeed = 0;
         for (SwerveModuleState moduleState : desiredStates) {
           realMaxSpeed = Math.max(realMaxSpeed, Math.abs(moduleState.speedMetersPerSecond));
         }
-      
-        //Map input magnitude back to speed in meters per second, divide by real speed to create scale
-        double scale = Math.min(k * SwerveModuleConstants.kPhysicalMaxSpeed / realMaxSpeed, 1);
-        //Desaturate speeds using that scale
-        for (SwerveModuleState moduleState : desiredStates) {
-          moduleState.speedMetersPerSecond *= scale;
+        
+        if(realMaxSpeed != 0){
+            //Map input magnitude back to speed in meters per second, divide by real speed to create scale
+            double scale = Math.min(k * SwerveModuleConstants.kPhysicalMaxSpeed / realMaxSpeed, 1);
+            //Desaturate speeds using that scale
+            for (SwerveModuleState moduleState : desiredStates) {
+              moduleState.speedMetersPerSecond *= scale;
+            }
         }
     }
 
