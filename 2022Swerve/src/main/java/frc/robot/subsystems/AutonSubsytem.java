@@ -161,7 +161,8 @@ public class AutonSubsytem extends SubsystemBase{
     private Command getBackupSequence(){
         //Backup sequence in case a trajectory fails to load
         return new SequentialCommandGroup(
-            followTrajectory("Up",
+            followTrajectory(
+                "Up",
                 generateTrajectory(
                     constructPoint(0, 0, 0, 90),
                     constructPoint(0, 1, 0, 0)

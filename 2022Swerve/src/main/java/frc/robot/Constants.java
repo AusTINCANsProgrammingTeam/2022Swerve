@@ -52,9 +52,7 @@ public final class Constants {
 
     public static final class AutonConstants {
         public static final double kMaxSpeed = DriveConstants.kPhysicalMaxSpeed / 4; //Maximum speed allowed in auton, in meters per second
-        public static final double kMaxAngularSpeed = DriveConstants.kPhysicalMaxAngularSpeed / 10; //Maximum angular speed allowed in auton, in radians per second
         public static final double kMaxAcceleration = 3; //Maximum accelaration allowed in auton, in meters per seconds squared
-        public static final double kMaxAngularAcceleration = Math.PI / 4; //Maximum angular accelaration allowed in auton, in radians per seconds squared
 
         public static final double kXTranslationP = 1.5;
         public static final double kYTranslationP = 1.5;
