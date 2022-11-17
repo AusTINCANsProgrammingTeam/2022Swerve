@@ -7,7 +7,6 @@ package frc.robot.classes;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
-
 import edu.wpi.first.hal.SimDevice;
 import edu.wpi.first.hal.SimDouble;
 

@@ -5,7 +5,6 @@
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -55,7 +54,7 @@ public class SwerveSubsystem extends SubsystemBase{
     private DoubleLogEntry translationYOutputLog = new DoubleLogEntry(datalog, "/swerve/tyout"); //Logs y translation state output
     private DoubleLogEntry rotationOutputLog = new DoubleLogEntry(datalog, "/swerve/rotout"); //Logs rotation state output
     private BooleanLogEntry controlOrientationLog = new BooleanLogEntry(datalog, "/swerve/orientation"); //Logs if robot is in FOD/ROD
-
+    
     public boolean controlOrientationIsFOD;
 
     public SwerveSubsystem() {
@@ -115,7 +114,7 @@ public class SwerveSubsystem extends SubsystemBase{
         }
 
         //Convert Chassis Speeds to individual module states
-        return DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);  
+        return DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
     }
 
     private void normalizeDrive(SwerveModuleState[] desiredStates, ChassisSpeeds speeds){

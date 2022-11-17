@@ -1,7 +1,6 @@
 package frc.robot;
 
 import java.util.function.Supplier;
-
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 

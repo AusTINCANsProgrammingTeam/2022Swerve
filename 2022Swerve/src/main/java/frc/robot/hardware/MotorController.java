@@ -2,7 +2,6 @@ package frc.robot.hardware;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import frc.robot.Constants.MotorDefaults;
 
 public class MotorController {
