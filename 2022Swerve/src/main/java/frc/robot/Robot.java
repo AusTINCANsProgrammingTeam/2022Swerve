@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -18,7 +20,9 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-
+  private int loopCount;
+  private DataLog datalog = DataLogManager.getLog();
+  private DoubleLogEntry loopCountLog;
   private RobotContainer m_robotContainer;
 
   /**
@@ -31,9 +35,12 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
+    loopCount = 0;
+
     DataLogManager.start();
     //Automatically log joystick and Driver Station control data
     DriverStation.startDataLog(DataLogManager.getLog());
+    loopCountLog = new DoubleLogEntry(datalog, "loopCount");
   }
 
   /**
@@ -50,6 +57,8 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    loopCount++;
+    loopCountLog.append(loopCount);
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
