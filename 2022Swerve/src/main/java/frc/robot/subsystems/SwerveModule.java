@@ -48,7 +48,7 @@ public class SwerveModule extends SubsystemBase {
 
     private final String ID;
 
-    private DataLog datalog = DataLogManager.getLog();
+    private DataLog SwerveModuledatalog = DataLogManager.getLog();
     private DoubleLogEntry speedLog;
     private DoubleLogEntry rotationLog;
     private DoubleLogEntry setSpeedLog;
@@ -91,10 +91,10 @@ public class SwerveModule extends SubsystemBase {
 
         resetEncoders();
 
-        speedLog = new DoubleLogEntry(datalog, "/swerveMod/" + ID + "/speed");
-        rotationLog = new DoubleLogEntry(datalog, "/swerveMod/" + ID + "/rotation");
-        setSpeedLog = new DoubleLogEntry(datalog, "/swerveMod/" + ID + "/setSpeed");
-        setRotationLog = new DoubleLogEntry(datalog, "/swerveMod/" + ID + "/setRotation");
+        speedLog = new DoubleLogEntry(SwerveModuledatalog, "/swerveMod/" + ID + "/speed");
+        rotationLog = new DoubleLogEntry(SwerveModuledatalog, "/swerveMod/" + ID + "/rotation");
+        setSpeedLog = new DoubleLogEntry(SwerveModuledatalog, "/swerveMod/" + ID + "/setSpeed");
+        setRotationLog = new DoubleLogEntry(SwerveModuledatalog, "/swerveMod/" + ID + "/setRotation");
     }
 
     public double getDrivePosition() {

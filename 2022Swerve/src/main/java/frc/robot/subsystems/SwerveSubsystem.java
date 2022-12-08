@@ -11,6 +11,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -49,11 +50,14 @@ public class SwerveSubsystem extends SubsystemBase{
 
     private AHRS gyro = new AHRS(SPI.Port.kMXP);
 
-    private DataLog datalog = DataLogManager.getLog();
-    private DoubleLogEntry translationXOutputLog = new DoubleLogEntry(datalog, "/swerve/txout"); //Logs x translation state output
-    private DoubleLogEntry translationYOutputLog = new DoubleLogEntry(datalog, "/swerve/tyout"); //Logs y translation state output
-    private DoubleLogEntry rotationOutputLog = new DoubleLogEntry(datalog, "/swerve/rotout"); //Logs rotation state output
-    private BooleanLogEntry controlOrientationLog = new BooleanLogEntry(datalog, "/swerve/orientation"); //Logs if robot is in FOD/ROD
+    private DataLog loopCountlog = DataLogManager.getLog();
+    private StringLogEntry loopCount = new StringLogEntry(loopCountlog, "/robot/loopCount");
+
+    private DataLog SwerveSubsystemdatalog = DataLogManager.getLog();
+    private DoubleLogEntry translationXOutputLog = new DoubleLogEntry(SwerveSubsystemdatalog, "/swerve/txout"); //Logs x translation state output
+    private DoubleLogEntry translationYOutputLog = new DoubleLogEntry(SwerveSubsystemdatalog, "/swerve/tyout"); //Logs y translation state output
+    private DoubleLogEntry rotationOutputLog = new DoubleLogEntry(SwerveSubsystemdatalog, "/swerve/rotout"); //Logs rotation state output
+    private BooleanLogEntry controlOrientationLog = new BooleanLogEntry(SwerveSubsystemdatalog, "/swerve/orientation"); //Logs if robot is in FOD/ROD
     
     public boolean controlOrientationIsFOD;
 
@@ -168,6 +172,7 @@ public class SwerveSubsystem extends SubsystemBase{
 
     @Override
     public void periodic() {
+        loopCount.append("loopCount");
         SmartDashboard.putNumber("Robot Heading", getHeading());
     }
 }
